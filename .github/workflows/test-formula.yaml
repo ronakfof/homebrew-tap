@@ -23,7 +23,7 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      # - run: brew test-bot --only-tap-syntax
+      - run: brew test-bot --only-tap-syntax 
 
       - run: brew test-bot --only-formulae-detect
         if: github.event_name == 'pull_request'
@@ -46,61 +46,61 @@ jobs:
           echo ${{needs.tap_syntax.outputs.testing_formulae}}
           echo ${{needs.tap_syntax.outputs.added_formulae}}
           echo ${{needs.tap_syntax.outputs.deleted_formulae}}
-      # - name: Set environment variables
-      #   if: runner.os == 'macOS'
-      #   run: |
-      #     echo 'PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin' >> $GITHUB_ENV
-      #     # TODO: remove the line below once set in the runner .env file
-      #     echo 'GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1' >> $GITHUB_ENV
+      - name: Set environment variables
+        if: runner.os == 'macOS'
+        run: |
+          echo 'PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin' >> $GITHUB_ENV
+          # TODO: remove the line below once set in the runner .env file
+          echo 'GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1' >> $GITHUB_ENV
       
-      # - run: brew test-bot --only-cleanup-before
+      - run: brew test-bot --only-cleanup-before
 
-      # - run: brew test-bot --only-setup
+      - run: brew test-bot --only-setup
       
-      # - name: Run brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --added-formulae=litani --deleted-formulae=
-      #   id: brew-test-bot-formulae
-      #   run: |
-      #     mkdir bottles
-      #     cd bottles
-      #     brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --added-formulae=litani --deleted-formulae=
-      # - name: Failures summary for brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=litani --added-formulae=litani --deleted-formulae=
-      #   if: always()
-      #   run: |
-      #     touch bottles/steps_output.txt
-      #     cat bottles/steps_output.txt
-      #     rm bottles/steps_output.txt
-      # - name: Run brew test-bot --only-formulae-dependents --junit --testing-formulae=litani --skipped-or-failed-formulae=
-      #   run: |
-      #     cd bottles
-      #     brew test-bot --only-formulae-dependents --junit --testing-formulae=litani --skipped-or-failed-formulae=
-      # - name: Output brew linkage result
-      #   if: always()
-      #   run: |
-      #     cat bottles/linkage_output.txt
-      #     rm bottles/linkage_output.txt
-      # - name: Output brew bottle result
-      #   if: always()
-      #   run: |
-      #     cat bottles/bottle_output.txt
-      #     rm bottles/bottle_output.txt
-      # - name: Delete logs and home
-      #   if: always()
-      #   run: |
-      #     rm -rvf bottles/logs
-      #     rm -rvf bottles/home
-      # - name: Count bottles
-      #   id: bottles
-      #   if: always()
-      #   run: |
-      #     cd bottles
-      #     count=$(ls *.json | wc -l | xargs echo -n)
-      #     echo "$count bottles"
-      #     echo "::set-output name=count::$count"
-      #     failures=$(ls failed/*.json | wc -l | xargs echo -n)
-      #     echo "$failures failed bottles"
-      #     echo "::set-output name=failures::$failures"
-      # - name: Post cleanup
-      #   if: always()
-      #   run: |
-      #     brew test-bot --only-cleanup-after
-      #     rm -rvf bottles
+      - name: Run brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --added-formulae=${{needs.tap_syntax.outputs.added_formulae}} --deleted-formulae=${{needs.tap_syntax.outputs.deleted_formulae}}
+        id: brew-test-bot-formulae
+        run: |
+          mkdir bottles
+          cd bottles
+          brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --added-formulae=${{needs.tap_syntax.outputs.added_formulae}} --deleted-formulae=${{needs.tap_syntax.outputs.deleted_formulae}}
+      - name: Failures summary for brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=litani --added-formulae=${{needs.tap_syntax.outputs.added_formulae}} --deleted-formulae=${{needs.tap_syntax.outputs.deleted_formulae}}
+        if: always()
+        run: |
+          touch bottles/steps_output.txt
+          cat bottles/steps_output.txt
+          rm bottles/steps_output.txt
+      - name: Run brew test-bot --only-formulae-dependents --junit --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --skipped-or-failed-formulae=
+        run: |
+          cd bottles
+          brew test-bot --only-formulae-dependents --junit --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --skipped-or-failed-formulae=
+      - name: Output brew linkage result
+        if: always()
+        run: |
+          cat bottles/linkage_output.txt
+          rm bottles/linkage_output.txt
+      - name: Output brew bottle result
+        if: always()
+        run: |
+          cat bottles/bottle_output.txt
+          rm bottles/bottle_output.txt
+      - name: Delete logs and home
+        if: always()
+        run: |
+          rm -rvf bottles/logs
+          rm -rvf bottles/home
+      - name: Count bottles
+        id: bottles
+        if: always()
+        run: |
+          cd bottles
+          count=$(ls *.json | wc -l | xargs echo -n)
+          echo "$count bottles"
+          echo "::set-output name=count::$count"
+          failures=$(ls failed/*.json | wc -l | xargs echo -n)
+          echo "$failures failed bottles"
+          echo "::set-output name=failures::$failures"
+      - name: Post cleanup
+        if: always()
+        run: |
+          brew test-bot --only-cleanup-after
+          rm -rvf bottles
