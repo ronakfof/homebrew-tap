@@ -1,0 +1,66 @@
+name: Formula tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tap_syntax:
+    if: github.repository == 'ronakfof/homebrew-tap'
+    runs-on: ubuntu-latest
+    outputs:
+      testing_formulae: ${{ steps.split-testing-formulae.outputs._3 }}
+      added_formulae: ${{ steps.split-added-formulae.outputs._3 }}
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      # - run: brew test-bot --only-tap-syntax 
+
+      - run: brew test-bot --only-formulae-detect
+        if: github.event_name == 'pull_request'
+        id: formulae-detect
+      - uses: jungwinter/split@v1
+        id: split-testing-formulae
+        with:
+          msg: ${{ steps.formulae-detect.outputs.testing_formulae }}
+          seperator: '/'
+      - uses: jungwinter/split@v1
+        id: split-added-formulae
+        with:
+          msg: ${{ steps.formulae-detect.outputs.added_formulae }}
+          seperator: '/'
+
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: 'ubuntu-latest'
+          - runner: 'macos-11'
+          - runner: 'ubuntu-18.04'
+          - runner: 'macos-latest'
+  
+    runs-on: ${{matrix.runner}}
+    needs: tap_syntax
+    steps:
+      - name: echo
+        run: |
+          echo ${{needs.tap_syntax.outputs.testing_formulae}}
+          echo ${{needs.tap_syntax.outputs.added_formulae}}
+          echo ${{needs.tap_syntax.outputs.deleted_formulae}}
+      # - name: Set environment variables
+      #   if: runner.os == 'macOS'
+      #   run: |
+      #     echo 'PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin' >> $GITHUB_ENV
+      #     # TODO: remove the line below once set in the runner .env file
+      #     echo 'GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1' >> $GITHUB_ENV
+      
+      # - run: brew test-bot --only-cleanup-before
+
+      # - run: brew test-bot --only-setup
+      
+      # - name: Run brew test-bot
+      #   run: brew test-bot --only-formulae --junit --only-json-tab --skip-dependents --testing-formulae=${{needs.tap_syntax.outputs.testing_formulae}} --added-formulae=${{needs.tap_syntax.outputs.added_formulae}} --deleted-formulae=${{needs.tap_syntax.outputs.deleted_formulae}}
