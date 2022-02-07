@@ -60,5 +60,6 @@ class Litani < Formula
            "--pipeline-name", "test-installation",
            "--ci-stage", "test"
     system bin/"litani", "run-build"
+    system "echo", "test"
   end
 end
