@@ -31,5 +31,6 @@ class AwsSamCli < Formula
 
   test do
     assert_match "Usage", shell_output("#{bin}/sam --help")
+    system "echo", "test"
   end
 end
