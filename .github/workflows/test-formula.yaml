@@ -11,8 +11,10 @@ jobs:
     if: github.repository == 'ronakfof/homebrew-tap'
     runs-on: ubuntu-latest
     outputs:
-      testing_formulae: ${{ steps.split-testing-formulae.outputs._3 }}
-      added_formulae: ${{ steps.split-added-formulae.outputs._3 }}
+      testing_formulae: ${{ steps.formulae-detect.outputs.testing_formulae }}
+      added_formulae: ${{ steps.formulae-detect.outputs.added_formulae }}
+      test: ${{ steps.split-testing-formulae.outputs._3 }}
+      add: ${{ steps.split-added-formulae.outputs._3 }}
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
@@ -48,9 +50,8 @@ jobs:
     steps:
       - name: echo
         run: |
-          echo ${{needs.tap_syntax.outputs.testing_formulae}}
-          echo ${{needs.tap_syntax.outputs.added_formulae}}
-          echo ${{needs.tap_syntax.outputs.deleted_formulae}}
+          echo ${{needs.tap_syntax.outputs.test}}
+          echo ${{needs.tap_syntax.outputs.add}}
       # - name: Set environment variables
       #   if: runner.os == 'macOS'
       #   run: |
