@@ -1,0 +1,56 @@
+name: Formula tests
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  tap_syntax:
+    if: github.repository == 'Homebrew/homebrew-core'
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/homebrew/ubuntu16.04:master
+    env:
+      HOMEBREW_SIMULATE_MACOS_ON_LINUX: 1
+    outputs:
+      testing_formulae: ${{ steps.formulae-detect.outputs.testing_formulae }}
+      added_formulae: ${{ steps.formulae-detect.outputs.added_formulae }}
+      deleted_formulae: ${{ steps.formulae-detect.outputs.deleted_formulae }}
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - run: brew test-bot --only-tap-syntax
+
+      - run: brew test-bot --only-formulae-detect
+        if: github.event_name == 'pull_request'
+        id: formulae-detect
+
+  build:
+    strategy:
+      matrix:
+        include:
+          - runner: 'ubuntu-latest'
+          - runner: 'macos-11'
+          - runner: 'ubuntu-18.04'
+          - runner: 'macos-latest'
+  
+    runs-on: ${{matrix.runner}}
+    needs: tap_syntax
+    steps:
+      - name: Set environment variables
+        if: runner.os == 'macOS'
+        run: |
+          echo 'PATH=/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin' >> $GITHUB_ENV
+          # TODO: remove the line below once set in the runner .env file
+          echo 'GITHUB_ACTIONS_HOMEBREW_SELF_HOSTED=1' >> $GITHUB_ENV
+      
+      - run: brew test-bot --only-cleanup-before
+
+      - run: brew test-bot --only-setup
+      
+      - name: Run brew test-bot
+        id: brew-test-bot-formulae
+        run: |
+          brew install ${{needs.tap_syntax.outputs.testing_formulae}}
+          brew test ${{needs.tap_syntax.outputs.testing_formulae}}
