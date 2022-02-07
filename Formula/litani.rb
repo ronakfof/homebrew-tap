@@ -58,7 +58,7 @@ class Litani < Formula
     system bin/"litani", "add-job",
            "--command", "/usr/bin/true",
            "--pipeline-name", "test-installation",
-           "--ci-stage", "test"
+           "--ci-stage", "test1"
     system bin/"litani", "run-build"
   end
 end
