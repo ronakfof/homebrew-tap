@@ -23,7 +23,7 @@ jobs:
           key: ${{ runner.os }}-rubygems-${{ steps.set-up-homebrew.outputs.gems-hash }}
           restore-keys: ${{ runner.os }}-rubygems-
 
-        run: brew test-bot --only-formulae-detect
+      - run: brew test-bot --only-formulae-detect
         if: github.event_name == 'pull_request'
         id: formulae-detect
 
