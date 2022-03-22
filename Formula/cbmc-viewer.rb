@@ -3,15 +3,15 @@ class CbmcViewer < Formula
   desc "Scans the output of CBMC and produces a browsable summary of the results"
   homepage "https://github.com/awslabs/aws-viewer-for-cbmc"
   url "https://github.com/ronakfof/viewer.git",
-      tag:      "viewer-2.27",
-      revision: "eb980eb2592bea1ac4c9f1a8187b9e08b72d40ef"
+      tag:      "viewer-2.28",
+      revision: "d32412e64741ff706fc163bf11fed88917f5cb92"
   license "Apache-2.0"
 
   bottle do
-    root_url "https://github.com/ronakfof/viewer/releases/download/viewer-2.27"
-    sha256 cellar: :any_skip_relocation, big_sur:      "f850cfe1b79274b89e697039a717bd376751cf9167a9b467b34be126e5dc251a"
-    sha256 cellar: :any_skip_relocation, catalina:     "db7b6fe8f687b4834de1cff8e8e064851715f8125dab3a0240c3bb0bc493d01b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "fb6f5ef0ca1c50de737de935a9bb869ff6e6e9ec14c08effa2b4211c34984828"
+    root_url "https://github.com/ronakfof/viewer/releases/download/viewer-2.28"
+    sha256 cellar: :any_skip_relocation, big_sur:      "7179e988c8fab1e7172acc49239f26db8a2ee9d3109baada654586dd51ecbfc6"
+    sha256 cellar: :any_skip_relocation, catalina:     "9ee91c81b0e753cd60dc2ac312acdb16aa38e726977c513d51c3f9f08cb6dc3e"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "acee589b1fad2b0a9b46ac99ab98bb88db0808fa075aa71523562b88b9aa5298"
   end
 
   depends_on "cbmc" => :test
