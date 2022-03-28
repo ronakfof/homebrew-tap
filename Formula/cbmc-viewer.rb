@@ -9,9 +9,9 @@ class CbmcViewer < Formula
 
   bottle do
     root_url "https://github.com/ronakfof/viewer/releases/download/viewer-2.55"
-    sha256 cellar: :any_skip_relocation, big_sur:      "7d8bba4d5b0c4916416cdea655d461708fa5470c0ec54d88e3d7f92099462f92"
-    sha256 cellar: :any_skip_relocation, catalina:     "3246600fad122203b1b80c41ee317b96624145bc29d637107d7ceff0abfb1ea4"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "7cd1788c9cb2931d9bcf6cd238d414e34854f181d93d984ac6542745a223fc4d"
+    sha256 cellar: :any_skip_relocation, big_sur:      "5f38849aec2feb7bdffb3e123ef2399c8d89c70cadecd7b3911f67add2266f2b"
+    sha256 cellar: :any_skip_relocation, catalina:     "6a372c7b117812ea59814e43191aba5b7a758b54b376f2e61aef6b6eb613df2d"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "73c37cb1c1b7dd8768a8b98e86b4d376f2ade8e6ee17fabffb4f3c5c631ca845"
   end
 
   depends_on "cbmc" => :test
