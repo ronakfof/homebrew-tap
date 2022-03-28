@@ -3,12 +3,12 @@ class CbmcViewer < Formula
   desc "Scans the output of CBMC and produces a browsable summary of the results"
   homepage "https://github.com/awslabs/aws-viewer-for-cbmc"
   url "https://github.com/ronakfof/viewer.git",
-      tag:      "viewer-2.50",
-      revision: "f99763c5fa5dac64b54a66c13396295ec8b37331"
+      tag:      "viewer-2.52",
+      revision: "d3265e425e64cc3148c399fbe7be681db88754a7"
   license "Apache-2.0"
 
   bottle do
-    root_url "https://github.com/ronakfof/viewer/releases/download/viewer-2.50"
+    root_url "https://github.com/ronakfof/viewer/releases/download/viewer-2.52"
     sha256 cellar: :any_skip_relocation, big_sur:      "0fe93a141d72028e6a2f987273a1a58077f5356cc3f5ede2114c97da6d4ad661"
     sha256 cellar: :any_skip_relocation, catalina:     "5c4a0063fac4a4aa60f5fcc2e468a85df485343af0a3f132053c8b112e69d26a"
     sha256 cellar: :any_skip_relocation, x86_64_linux: "41e84deab4cac28187ed9f93397bdd6a49b5d87f506bafea6910777bb4adc1fc"
